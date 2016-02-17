@@ -4,7 +4,7 @@ Accounting Service API (v1.0)
 Table of contents:
 
 1. [Data formats](#data-formats)
-1. [Authantication](#authentication)
+1. [Authentication](#authentication)
 
 
 ## <a name="data-formats">Data formats</a>
