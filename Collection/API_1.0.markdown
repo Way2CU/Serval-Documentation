@@ -25,22 +25,13 @@ Table of contents:
 
 ## <a name="data-formats">Data formats</a>
 
-_Serval_ accounting service uses [Protocol Buffers][protobuff] for internal communication with puppeteer
-service and collection service. Communication with public API is done with JSON objects through
-standard HTTP(S) protocol. All data is stored and used in UTF32 encoding.
+_Serval_ accounting service uses [Protocol Buffers][protobuff] for internal communication with puppeteer service and collection service. Communication with public API is done with JSON objects through standard HTTP(S) protocol. All data is stored and used in UTF32 encoding.
 
-For `POST` methods, both request and response body is in JSON format. `GET` and `DELETE` use
-standard NVP query strings for request, response body is then returned in JSON format. _All
-NVP parameter values must be URL encoded._
+For `POST` methods, both request and response body is in JSON format. `GET` and `DELETE` use standard NVP query strings for request, response body is then returned in JSON format. _All NVP parameter values must be URL encoded._
 
-Service can be extended to accept different formats through different protocols by adapting
-existing or creating new service extensions.
+Service can be extended to accept different formats through different protocols by adapting existing or creating new service extensions.
 
-For internal communication [Salsa20][salsa20] encryption algorithm is used. Connections are
-stream-based and can be used for multiple requests. Upon opening new connection client must
-send 32 bytes long initialization vector along with client id. This IV will be used in encryption
-process for the currently active session. Keys used in encryption are never exchanged through the
-network and are considered known at the time of encryption.
+For internal communication [Salsa20][salsa20] encryption algorithm is used. Connections are stream-based and can be used for multiple requests. Upon opening new connection client must send 32 bytes long initialization vector along with client id. This IV will be used in encryption process for the currently active session. Keys used in encryption are never exchanged through the network and are considered known at the time of encryption.
 
 
 [protobuff]: https://developers.google.com/protocol-buffers
@@ -49,38 +40,27 @@ network and are considered known at the time of encryption.
 
 ## <a name="authentication">Authentication</a>
 
-For service to accept data, client must provide identifying information. To avoid integration
-complexity authentication data is sent per-request. Service does not support any sort of session
-based authentication.
+For service to accept data, client must provide identifying information. To avoid integration complexity authentication data is sent per-request. Service does not support any sort of session based authentication.
 
-Authentication is done through basic HTTP authentication. Authentication is done by specifying
-`Authorization` header with value set to `Basic <code>`. Where code is BASE64 encoded pair of
-`username:password`.
+Authentication is done through basic HTTP authentication. Authentication is done by specifying `Authorization` header with value set to `Basic <code>`. Where code is BASE64 encoded pair of `username:password`.
 
 Example:
 
 	Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQK
 
-For internal communication authentication is not required as keys are considered private and
-trusted. Identifying information for client is exchanged in first encrypted message.
+For internal communication authentication is not required as keys are considered private and trusted. Identifying information for client is exchanged in first encrypted message.
 
 
 ## <a name="endpoints">End points</a>
 
-Structure of API endpoint path for version 1.0 follows strict format (`/<version>/json/<object>`).
-Objects are always included as a part of path and are case sensitive. They represent object of
-operation while request method (`GET`, `POST`, `DELETE`) specifies operation itself.
+Structure of API endpoint path for version 1.0 follows strict format (`/<version>/json/<object>`).  Objects are always included as a part of path and are case sensitive. They represent object of operation while request method (`GET`, `POST`, `DELETE`) specifies operation itself.
 
-For example, endpoint for storing new phone call would be `/v1/json/calls` while using `POST`
-method. Call information is transfered as request body in form of JSON object. Some objects support
-additional operations in their endpoint in format `/v1/json/<object>/<action>`.
+For example, endpoint for storing new phone call would be `/v1/json/calls` while using `POST` method. Call information is transfered as request body in form of JSON object. Some objects support additional operations in their endpoint in format `/v1/json/<object>/<action>`.
 
 
 ### <a name="endpoints/response-codes">Response codes</a>
 
-All service operations return standard HTTP `200` code on successful execution and `500` when
-error occurs with exception to `403` on failed authentication and `501` when endpoint path is
-malformed. Message following the code will give more insight in what kind of error occurred.
+All service operations return standard HTTP `200` code on successful execution and `500` when error occurs with exception to `403` on failed authentication and `501` when endpoint path is malformed. Message following the code will give more insight in what kind of error occurred.
 
 
 ### <a name="endpoints/example-request">Example request</a>
@@ -102,8 +82,7 @@ The following is a complete service request with headers and authentication:
 
 ## <a name="leads">Leads</a>
 
-Working with leads is done through `/v1/json/leads` endpoint. While system supports directly storing
-leads it will try to automatically assign other data types (calls, contact forms, etc.) with a lead.
+Working with leads is done through `/v1/json/leads` endpoint. While system supports directly storing leads it will try to automatically assign other data types (calls, contact forms, etc.) with a lead.
 
 System recognizes the following actions, along with specified methods:
 
@@ -125,9 +104,7 @@ Only the following data can be changed: `name`, `status`.
 
 ### <a name="leads/submit">Submitting new lead</a>
 
-This endpoint is used to submit new lead or update existing information. By specifying lead `id` in
-your request body data will be modified instead of inserted. Only [specific fields](#leads/data-structure)
-can be modified. Others will be ignored.
+This endpoint is used to submit new lead or update existing information. By specifying lead `id` in your request body data will be modified instead of inserted. Only [specific fields](#leads/data-structure) can be modified. Others will be ignored.
 
 Method: `POST`  
 Endpoint: `/v1/json/leads`
@@ -156,10 +133,7 @@ Response body:
 
 ### <a name="leads/get">Getting list of leads</a>
 
-This endpoint gives a list of one or more leads. If lead `id` is specified as a single number or
-comma separated list of numbers, only those leads will be matched against other parameters. In case
-requested parameters didn't match any leads empty list is returned. All fields in request query
-string are optional. Omitting all of them will return all leads.
+This endpoint gives a list of one or more leads. If lead `id` is specified as a single number or comma separated list of numbers, only those leads will be matched against other parameters. In case requested parameters didn't match any leads empty list is returned. All fields in request query string are optional. Omitting all of them will return all leads.
 
 Method: `GET`  
 Endpoint: `/v1/json/leads`
@@ -202,14 +176,10 @@ Response body:
 
 ### <a name="leads/delete">Removing lead and its data</a>
 
-This endpoint will mark specified lead as removed. System doesn't not support permanent removal of data
-in order to prevent undesired behavior and removal by mistake. This API endpoint only accepts single
-lead id or comma separated list of ids to be removed. Response body is always an empty JSON object. Result
-of data removal is returned through response code and message.
+This endpoint will mark specified lead as removed. System doesn't not support permanent removal of data in order to prevent undesired behavior and removal by mistake. This API endpoint only accepts single lead id or comma separated list of ids to be removed. Response body is always an empty JSON object. Result of data removal is returned through response code and message.
 
 Method: `DELETE`  
 Endpoint: `/v1/json/leads`
-
 
 Query string:
 
@@ -225,8 +195,7 @@ Response body:
 
 ## <a name="calls">Call information</a>
 
-Working with phone calls is done through `/v1/json/calls` endpoint. Phone calls can not be deleted
-only marked as such. Deleted phone calls are excluded from reports and statistics.
+Working with phone calls is done through `/v1/json/calls` endpoint. Phone calls can not be deleted only marked as such. Deleted phone calls are excluded from reports and statistics.
 
 System recognizes the following actions, along with specified methods:
 
@@ -254,9 +223,7 @@ Only the following data can be changed: `tags`, `status`, `lead`.
 
 ### <a name="calls/submit">Submitting new phone call</a>
 
-This endpoint is used to submit new phone call. By specifying call `id` in your request
-body data will be modified instead of inserted. Only [specific fields](#calls/data-structure)
-can be posted. Others will be ignored.
+This endpoint is used to submit new phone call. By specifying call `id` in your request body data will be modified instead of inserted. Only [specific fields](#calls/data-structure) can be posted. Others will be ignored.
 
 Method: `POST`  
 Endpoint: `/v1/json/calls`
@@ -294,11 +261,7 @@ Response body:
 
 ### <a name="#calls/get">Getting list of phone calls</a>
 
-This endpoint gives a list of one or more phone calls. If call `id` is specified as a single number or
-comma separated list of numbers, only those calls will be matched against other parameters. In case
-requested parameters didn't match any leads empty list is returned. All fields in request query
-string are optional. Omitting all of them will return all leads. If not otherwise specified API will
-return only calls that are not marked as deleted.
+This endpoint gives a list of one or more phone calls. If call `id` is specified as a single number or comma separated list of numbers, only those calls will be matched against other parameters. In case requested parameters didn't match any leads empty list is returned. All fields in request query string are optional. Omitting all of them will return all leads. If not otherwise specified API will return only calls that are not marked as deleted.
 
 Method: `GET`  
 Endpoint: `/v1/json/calls`
@@ -353,14 +316,10 @@ Response body:
 
 ### <a name="#calls/delete">Removing phone call</a>
 
-This endpoint will mark specified phone call as removed. System doesn't not support permanent removal of data
-in order to prevent undesired behavior and removal by mistake. This API endpoint only accepts single
-call id or comma separated list of ids to be removed. Response body is always an empty JSON object. Result
-of data removal is returned through response code and message.
+This endpoint will mark specified phone call as removed. System doesn't not support permanent removal of data in order to prevent undesired behavior and removal by mistake. This API endpoint only accepts single call id or comma separated list of ids to be removed. Response body is always an empty JSON object. Result of data removal is returned through response code and message.
 
 Method: `DELETE`  
 Endpoint: `/v1/json/calls`
-
 
 Query string:
 
@@ -373,8 +332,7 @@ Response body:
 
 ## <a name="forms">Contact forms</a>
 
-Working with contact forms is done through `/v1/json/forms` endpoint. Contact form data can not be
-deleted only marked as such. Deleted contact form data is excluded from reports and statistics.
+Working with contact forms is done through `/v1/json/forms` endpoint. Contact form data can not be deleted only marked as such. Deleted contact form data is excluded from reports and statistics.
 
 System recognizes the following actions, along with specified methods:
 
@@ -397,9 +355,7 @@ Only the following data can be changed: `status`, `lead`.
 
 ### <a name="#forms/submit">Submitting new contact form</a>
 
-This endpoint is used to submit new contact form data. By specifying call `id` in your request
-body data will be modified instead of inserted. Only [specific fields](#calls/data-structure)
-can be posted. Others will be ignored.
+This endpoint is used to submit new contact form data. By specifying call `id` in your request body data will be modified instead of inserted. Only [specific fields](#calls/data-structure) can be posted. Others will be ignored.
 
 Method: `POST`  
 Endpoint: `/v1/json/forms`
@@ -433,11 +389,7 @@ Response body:
 
 ### <a name="#forms/get">Getting list of contact forms</a>
 
-This endpoint gives a list of one or more contact forms. If form `id` is specified as a single number or
-comma separated list of numbers, only those form data will be matched against other parameters. In case
-requested parameters didn't match any leads empty list is returned. All fields in request query
-string are optional. Omitting all of them will return all contact form data. If not otherwise specified
-API will return only data that is not marked as deleted.
+This endpoint gives a list of one or more contact forms. If form `id` is specified as a single number or comma separated list of numbers, only those form data will be matched against other parameters. In case requested parameters didn't match any leads empty list is returned. All fields in request query string are optional. Omitting all of them will return all contact form data. If not otherwise specified API will return only data that is not marked as deleted.
 
 Method: `GET`  
 Endpoint: `/v1/json/forms`
@@ -482,14 +434,10 @@ Response body:
 
 ### <a name="#forms/delete">Removing contact form</a>
 
-This endpoint will mark specified contact form as removed. System doesn't not support permanent removal of data
-in order to prevent undesired behavior and removal by mistake. This API endpoint only accepts single
-contact form id or comma separated list of ids to be removed. Response body is always an empty JSON object.
-Result of data removal is returned through response code and message.
+This endpoint will mark specified contact form as removed. System doesn't not support permanent removal of data in order to prevent undesired behavior and removal by mistake. This API endpoint only accepts single contact form id or comma separated list of ids to be removed. Response body is always an empty JSON object.  Result of data removal is returned through response code and message.
 
 Method: `DELETE`  
 Endpoint: `/v1/json/forms`
-
 
 Query string:
 
