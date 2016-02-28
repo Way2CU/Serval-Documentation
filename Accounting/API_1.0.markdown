@@ -84,18 +84,19 @@ All service operations return standard HTTP `200` code on successful execution a
 
 The following is a complete service request with headers and authentication:
 
-	POST /v1/json/organization HTTP/1.1
-	Host: ?????
-	Content-Type: application/json; charset=UTF-8
-	Content-Length: ???
-	Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQK
-	Connection: close
+```
+POST /v1/json/organization HTTP/1.1
+Host: ?????
+Content-Type: application/json; charset=UTF-8
+Content-Length: ???
+Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQK
+Connection: close
 
-	{
-		"name": "Weirdo Inc.",
-		"web_site": "http://something.com"
-	}
-
+{
+	"name": "Weirdo Inc.",
+	"web_site": "http://something.com"
+}
+```
 
 ### <a name="api/organization">Organizations</a>
 
