@@ -86,18 +86,18 @@ Working with leads is done through `/v1/json/leads` endpoint. While system suppo
 
 System recognizes the following actions, along with specified methods:
 
-* [Submitting new lead - `POST /v1/json/leads`](#leads/submit)
-* [Getting list of leads - `GET /v1/json/leads`](#leads/get)
-* [Removing lead and its data - `DELETE /v1/json/leads`](#leads/delete)
-* [Getting all data associated with lead - `GET /v1/json/leads/data`](#leads/get_data)
+- [Submitting new lead - `POST /v1/json/leads`](#leads/submit)
+- [Getting list of leads - `GET /v1/json/leads`](#leads/get)
+- [Removing lead and its data - `DELETE /v1/json/leads`](#leads/delete)
+- [Getting all data associated with lead - `GET /v1/json/leads/data`](#leads/get_data)
 
 <a name="leads/data-structure">Data structure:</a>
 
-* `id` - Unique id of lead;
-* `name` - Full name of the lead;
-* `status` - Numerical representation of lead status;
-* `initial_source` - Origin of first submission (client id);
-* `timestamp` - Date and time of first submission in format `YYYY-MM-DD HH:MM:SS`.
+- `id` - Unique id of lead;
+- `name` - Full name of the lead;
+- `status` - Numerical representation of lead status;
+- `initial_source` - Origin of first submission (client id);
+- `timestamp` - Date and time of first submission in format `YYYY-MM-DD HH:MM:SS`.
 
 Only the following data can be changed: `name`, `status`.
 
@@ -140,8 +140,8 @@ Endpoint: `/v1/json/leads`
 
 Additional parameters:
 
-* `from` - Starting timestamp. If time is omitted it defaults to first second of the day;
-* `to` - Ending timestamp. If time is omitted it defaults to last second of the day.
+- `from` - Starting timestamp. If time is omitted it defaults to first second of the day;
+- `to` - Ending timestamp. If time is omitted it defaults to last second of the day.
 
 Query string:
 
@@ -199,24 +199,24 @@ Working with phone calls is done through `/v1/json/calls` endpoint. Phone calls 
 
 System recognizes the following actions, along with specified methods:
 
-* [Submitting new phone call - `POST /v1/json/calls`](#calls/submit)
-* [Getting list of phone calls - `GET /v1/json/calls`](#calls/get)
-* [Removing phone call - `DELETE /v1/json/calls`](#calls/delete)
+- [Submitting new phone call - `POST /v1/json/calls`](#calls/submit)
+- [Getting list of phone calls - `GET /v1/json/calls`](#calls/get)
+- [Removing phone call - `DELETE /v1/json/calls`](#calls/delete)
 
 <a name="calls/data-structure">Data structure:</a>
 
-* `id` - Unique id of phone call;
-* `lead` - Unique id of associated lead;
-* `source` - Origin of submission (client id);
-* `audio_url` - URL of audio file;
-* `duration` - Total duration of phone call in seconds;
-* `ring_time` - Time before phone was picked up in seconds;
-* `talk_time` - Total time spent in conversation in seconds;
-* `caller_number` - Phone number of caller;
-* `receiving_number` - Phone number that received the call;
-* `tags` - Comma-separated list of custom tags;
-* `timestamp` - Date and time of first submission in format `YYYY-MM-DD HH:MM:SS`;
-* `status` - Integer denoting status of phone call.
+- `id` - Unique id of phone call;
+- `lead` - Unique id of associated lead;
+- `source` - Origin of submission (client id);
+- `audio_url` - URL of audio file;
+- `duration` - Total duration of phone call in seconds;
+- `ring_time` - Time before phone was picked up in seconds;
+- `talk_time` - Total time spent in conversation in seconds;
+- `caller_number` - Phone number of caller;
+- `receiving_number` - Phone number that received the call;
+- `tags` - Comma-separated list of custom tags;
+- `timestamp` - Date and time of first submission in format `YYYY-MM-DD HH:MM:SS`;
+- `status` - Integer denoting status of phone call.
 
 Only the following data can be changed: `tags`, `status`, `lead`.
 
@@ -230,9 +230,9 @@ Endpoint: `/v1/json/calls`
 
 Additional parameters:
 
-* `lead` - Id of lead to associate phone call with;
-* `name` - Caller name used to automatically associate with existing lead;
-* `email` - Caller email used to automatically associate with existing lead.
+- `lead` - Id of lead to associate phone call with;
+- `name` - Caller name used to automatically associate with existing lead;
+- `email` - Caller email used to automatically associate with existing lead.
 
 Request body:
 
@@ -268,9 +268,9 @@ Endpoint: `/v1/json/calls`
 
 Additional parameters:
 
-* `from` - Starting timestamp. If time is omitted it defaults to first second of the day;
-* `to` - Ending timestamp. If time is omitted it defaults to last second of the day;
-* `lead` - Lead id to associate data with.
+- `from` - Starting timestamp. If time is omitted it defaults to first second of the day;
+- `to` - Ending timestamp. If time is omitted it defaults to last second of the day;
+- `lead` - Lead id to associate data with.
 
 Query string:
 
@@ -336,19 +336,19 @@ Working with contact forms is done through `/v1/json/forms` endpoint. Contact fo
 
 System recognizes the following actions, along with specified methods:
 
-* [Submitting new contact form - `POST /v1/json/forms`](#forms/submit)
-* [Getting list of contact forms - `GET /v1/json/forms`](#forms/get)
-* [Removing contact form submission - `DELETE /v1/json/forms`](#forms/delete)
+- [Submitting new contact form - `POST /v1/json/forms`](#forms/submit)
+- [Getting list of contact forms - `GET /v1/json/forms`](#forms/get)
+- [Removing contact form submission - `DELETE /v1/json/forms`](#forms/delete)
 
 <a name="forms/data-structure">Data structure:</a>
 
-* `id` - Unique id of phone call;
-* `lead` - Unique id of associated lead;
-* `source` - Origin of submission (client id);
-* `email` - Contact email address;
-* `phone` - Contact phone number;
-* `timestamp` - Date and time of first submission in format `YYYY-MM-DD HH:MM:SS`;
-* `status` - Integer value denoting status of contact form submission.
+- `id` - Unique id of phone call;
+- `lead` - Unique id of associated lead;
+- `source` - Origin of submission (client id);
+- `email` - Contact email address;
+- `phone` - Contact phone number;
+- `timestamp` - Date and time of first submission in format `YYYY-MM-DD HH:MM:SS`;
+- `status` - Integer value denoting status of contact form submission.
 
 Only the following data can be changed: `status`, `lead`.
 
@@ -362,10 +362,10 @@ Endpoint: `/v1/json/forms`
 
 Additional parameters:
 
-* `lead` - Id of lead to associate form data with;
-* `name` - Caller name used to automatically associate with existing lead;
-* `email` - Caller email used to automatically associate with existing lead;
-* `phone_number` - Phone number used to automatically associate with existing lead.
+- `lead` - Id of lead to associate form data with;
+- `name` - Caller name used to automatically associate with existing lead;
+- `email` - Caller email used to automatically associate with existing lead;
+- `phone_number` - Phone number used to automatically associate with existing lead.
 
 Request body:
 
@@ -396,9 +396,9 @@ Endpoint: `/v1/json/forms`
 
 Additional parameters:
 
-* `from` - Starting timestamp. If time is omitted it defaults to first second of the day;
-* `to` - Ending timestamp. If time is omitted it defaults to last second of the day;
-* `lead` - Lead id to associate data with.
+- `from` - Starting timestamp. If time is omitted it defaults to first second of the day;
+- `to` - Ending timestamp. If time is omitted it defaults to last second of the day;
+- `lead` - Lead id to associate data with.
 
 Query string:
 
