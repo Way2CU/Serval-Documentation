@@ -147,12 +147,14 @@ Additional parameters:
 
 Query string:
 
-	id=0,2
-	name=Joe*
-	status=0
-	initial_source=0
-	from=2014-01-30 20:00:00
-	to=2016-02-10 10:00:00
+```
+id=0,2
+name=Joe*
+status=0
+initial_source=0
+from=2014-01-30 20:00:00
+to=2016-02-10 10:00:00
+```
 
 Response body:
 

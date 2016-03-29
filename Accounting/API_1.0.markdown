@@ -10,12 +10,14 @@ Table of contents:
 		1. [Response codes](#api/endpoints/response-codes)
 		2. [Example request](#api/endpoints/example-request)
 	3. [Organizations](#api/organization)
-		1. [Adding new organization](#api/organization/add)
-		2. [Changing organization related data](#api/organization/change)
-		3. [Transfering organization ownership](#api/organization/transfer-ownership)
-		4. [Assigning users to organization](#api/organization/assign-user)
-		6. [Changing user access to organization](#api/organization/access)
-		5. [Removing organization](#api/organization/remove)
+		1. [Retrieving organization information](#api/organization/get)
+		2. [Adding new organization](#api/organization/add)
+		3. [Changing organization related data](#api/organization/change)
+		4. [Removing organization](#api/organization/remove)
+		5. [Listing users with access to organization](#api/organization/users)
+		6. [Assigning users to organization](#api/organization/assign-user)
+		7. [Changing user access to organization](#api/organization/change-access)
+		8. [Removing users from organization](#api/organization/remove-user)
 	4. [User accounts](#api/users)
 		1. [Adding new user to collection service](#api/users/add)
 		2. [Changing user information](api/users/change)
@@ -72,7 +74,7 @@ For internal communication authentication is not required as keys are considered
 
 Structure of API endpoint path for version 1.0 follows strict format (`/<version>/json/<object>`).  Objects are always included as a part of path and are case sensitive. They represent object of operation while request method (`GET`, `POST`, `DELETE`) specifies operation itself.
 
-For example, endpoint for storing new phone call would be `/v1/json/organization` while using `POST` method. Call information is transfered as request body in form of JSON object. Some objects support additional operations in their endpoint in format `/v1/json/<object>/<action>`.
+For example, endpoint for creating new organization would be `/v1/json/organization` while using `POST` method. Organization information is transfered as request body in form of JSON object. Some objects support additional operations in their endpoint in format `/v1/json/<object>/<action>`.
 
 
 #### <a name="api/endpoints/response-codes">Response codes</a>
@@ -104,13 +106,20 @@ Working with organizations is done through `/v1/json/organization` endpoint. Org
 
 System recognizes the following actions, along with specified methods:
 
+- [Retrieving organization information - `GET /v1/json/organization`](#api/organization/get)
 - [Adding new organization - `POST /v1/json/organization`](#api/organization/add)
+- [Changing organization related data `PATCH /v1/json/organization](#api/organization/change)
+- [Removing organization `DELETE /v1/json/organization](#api/organization/remove)
+- [Listing users with access to organization `GET /v1/json/organization-access](#api/organization/users)
+- [Assigning users to organization `POST /v1/json/organization-access](#api/organization/assign-user)
+- [Changing user access to organization `PATCH /v1/json/organization-access](#api/organization/change-access)
+- [Removing users from organization `DELETE /v1/json/organization-access](#api/organization/remove-user)
 
 <a name="api/organization/data-structure">Data structure:</a>
 
 - `id` - Unique id of organization;
 - `name` - Full name of the organization;
-- `web_site` - URL to the company site;
+- `web_site` - URL to the company site without protocol;
 - `phone_number` - Contact phone number;
 - `address` - Office street address;
 - `city` - City where offices are located;
@@ -124,3 +133,133 @@ All data, except for `id`, can be changed.
 
 
 #### <a name="api/organization/add">Adding new organization</a>
+
+This endpoint is used to create new organization associated with currently logged in user account. Response contains `id` of newly created organization and `result` of operation.
+
+Method: `POST`  
+Endpoint: `/v1/json/organization`
+
+Request body:
+
+```json
+{
+	"name": "Company Inc.",
+	"web_site": "somesite.com",
+	"phone_number": "000-CALL-NOW",
+	"address": "Bruce Partington rd. 221b",
+	"city": "London",
+	"zip": "1000",
+	"state": "",
+	"country": "UK",
+	"colors": "#330033,white,#ff00ff",
+	"logo_url": "somesite.com/images/logo.png"
+}
+```
+
+Response body:
+
+```json
+{
+	"id": 213,
+	"result": true
+}
+```
+
+
+#### <a name="api/organization/change">Changing organization related data</a>
+
+This endpoint is used to change specified organization data. Only [fields](#api/organization/data-structure) specified in request will be modified. Fields which can't be modified will be silently ignored.
+
+Response body contains `id` of affected organization and `result` of operation. If operation fails, `id` will be set to 0.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/organization`
+
+Request body:
+
+```json
+{
+	"id": 213,
+	"name": "New Name Inc."
+}
+```
+
+Response body:
+
+```json
+{
+	"id": 213,
+	"result": true
+}
+```
+
+#### <a name="api/organization/remove">Removing organization</a>
+
+Schedules organization and all of its services for permanent removal. User accounts associated with the organization will not be affected. Removing organization is a _manual_ process and will not happen automatically. After one month since organization was marked for removal has passed calling this endpoint again organization and all the data associated with it will be **permanently** removed.
+
+During this waiting period services assigned to organization will continue to operate normally and can be transfered to other organizations. Owners can cancel removal process at any time.
+
+Method: `DELETE`  
+Endpoint: `/v1/json/organization`
+
+```
+organization=213
+```
+
+Response body:
+
+```json
+{
+	"scheduled": "2016-10-10",
+	"result": true
+}
+```
+
+#### <a name="api/organization/users">Listing users with access to organization</a>
+
+Get list of all users with access to `organization` specified in request parameter. This endpoint is only available to users which have ability to modify user access in organization.
+
+Method: `GET`  
+Endpoint: `/v1/json/organization-access`
+
+Request body:
+
+```
+organization=213
+```
+
+Response body:
+
+```json
+{
+	"users": [11, 1450, 234],
+	"result": true
+}
+```
+
+#### <a name="api/organization/assign-user">Assigning users to organization</a>
+
+Endpoint used to allow existing users to access organization and its data with specified restrictions. This endpoint can not be used to create new user account.
+
+Response object contains `result` of the operation.
+
+Method: `POST`  
+Endpoint: `/v1/json/organization-access`
+
+Request body:
+
+```json
+{
+	"organization": 213,
+	"user": 12,
+	"access": 0
+}
+```
+
+Response body:
+
+```json
+{
+	"result": true
+}
+```
