@@ -110,12 +110,12 @@ System recognizes the following actions, along with specified methods:
 
 - [Retrieving organization information - `GET /v1/json/organization`](#api/organization/get)
 - [Adding new organization - `POST /v1/json/organization`](#api/organization/add)
-- [Changing organization related data `PATCH /v1/json/organization](#api/organization/change)
-- [Removing organization `DELETE /v1/json/organization](#api/organization/remove)
-- [Listing users with access to organization `GET /v1/json/organization-access](#api/organization/users)
-- [Assigning users to organization `POST /v1/json/organization-access](#api/organization/assign-user)
-- [Changing user access to organization `PATCH /v1/json/organization-access](#api/organization/change-access)
-- [Removing users from organization `DELETE /v1/json/organization-access](#api/organization/remove-user)
+- [Changing organization related data `PATCH /v1/json/organization`](#api/organization/change)
+- [Removing organization `DELETE /v1/json/organization`](#api/organization/remove)
+- [Listing users with access to organization `GET /v1/json/organization-access`](#api/organization/users)
+- [Assigning users to organization `POST /v1/json/organization-access`](#api/organization/assign-user)
+- [Changing user access to organization `PATCH /v1/json/organization-access`](#api/organization/change-access)
+- [Removing users from organization `DELETE /v1/json/organization-access`](#api/organization/remove-user)
 
 <a name="api/organization/data-structure">Data structure:</a>
 
