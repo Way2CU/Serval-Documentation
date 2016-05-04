@@ -102,7 +102,9 @@ Connection: close
 
 ### <a name="api/organization">Organizations</a>
 
-Working with organizations is done through `/v1/json/organization` endpoint. Organizations are entities used to organize and group data collection and users. They do not necessarily represent legal entities. System allows for user interface to be customized with organization colors and logo image.
+Working with organizations is done through `/v1/json/organization` and `/v1/json/organization-access` endpoints. Organizations are entities used to organize and group data collection and users. They do not necessarily represent legal entities. System allows for user interface to be customized with organization colors and logo image.
+
+Business plans are applied and billed per organization.
 
 System recognizes the following actions, along with specified methods:
 
@@ -237,6 +239,7 @@ Response body:
 }
 ```
 
+
 #### <a name="api/organization/assign-user">Assigning users to organization</a>
 
 Endpoint used to allow existing users to access organization and its data with specified restrictions. This endpoint can not be used to create new user account.
@@ -263,3 +266,62 @@ Response body:
 	"result": true
 }
 ```
+
+
+#### <a name="api/organization/change-access">Changing user access to organization</a>
+
+Change access for user in organization. This endpoint allows you to promote or demote users withing organization. It is also used in ownership transfers. It's important to note that organization can have more than one owner account and in fact an advisable situation to be in as it will make sure [bus factor](https://en.wikipedia.org/wiki/Bus_factor) is higher.
+
+Response object contains `result` of the operation.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/organization-access`
+
+Request body:
+
+```json
+{
+	"organization": 213,
+	"user": 12,
+	"access": 0
+}
+```
+
+Response body:
+
+```json
+{
+	"result": true
+}
+```
+
+
+#### <a name="api/organization/remove-user">Removing users from organization</a>
+
+Remove user from the organization. This operation does not affect data associated with the user.
+
+Response object contains `result` of the operation.
+
+Method: `DELETE`  
+Endpoint: `/v1/json/organization-access`
+
+Request body:
+
+```json
+{
+	"organization": 213,
+	"user": 12
+}
+```
+
+Response body:
+
+```json
+{
+	"result": true
+}
+```
+
+
+### <a name="api/users">User accounts</a>
+
