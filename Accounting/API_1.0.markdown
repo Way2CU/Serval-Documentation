@@ -14,6 +14,7 @@ Table of contents:
 		2. [Adding new organization](#api/organization/add)
 		3. [Changing organization related data](#api/organization/change)
 		4. [Removing organization](#api/organization/remove)
+			- [Canceling organization removal](#api/organization/remove-cancel)
 		5. [Listing users with access to organization](#api/organization/users)
 		6. [Assigning users to organization](#api/organization/assign-user)
 		7. [Changing user access to organization](#api/organization/change-access)
@@ -199,7 +200,9 @@ Response body:
 
 Schedules organization and all of its services for permanent removal. User accounts associated with the organization will not be affected. Removing organization is a _manual_ process and will not happen automatically. After one month since organization was marked for removal has passed calling this endpoint again organization and all the data associated with it will be **permanently** removed.
 
-During this waiting period services assigned to organization will continue to operate normally and can be transfered to other organizations. Owners can cancel removal process at any time.
+During this waiting period services assigned to organization will continue to operate normally and can be transferred to other organizations. Owners can [cancel removal](#api/organization/remove-cancel) process at any time.
+
+If this request is made and organization is already scheduled for removal no changes to initial date are made. Response will contain `true` and original date of removal.
 
 Method: `DELETE`  
 Endpoint: `/v1/json/organization`
@@ -216,6 +219,30 @@ Response body:
 	"result": true
 }
 ```
+
+
+##### <a name="api/organization/remove-cancel">Canceling organization removal</a>
+
+Organization removal can be canceled by any account with _owner_ access before removal is confirmed. If organization and its services were removed by the system they can not be recovered.
+
+Return value for this call denotes if cancellation was successful.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/organization`
+
+```
+organization=213
+```
+
+Response body:
+
+```json
+{
+	"scheduled": "2016-10-10",
+	"result": true
+}
+```
+
 
 #### <a name="api/organization/users">Listing users with access to organization</a>
 
