@@ -211,6 +211,8 @@ If this request is made before waiting period is over, system will return `false
 Method: `DELETE`  
 Endpoint: `/v1/json/organization`
 
+Request body:
+
 ```
 organization=213
 ```
@@ -235,8 +237,12 @@ If this request is made and organization is already scheduled for removal no cha
 Method: `POST`  
 Endpoint: `/v1/json/organization-remove`
 
-```
-organization=213
+Request body:
+
+```json
+{
+	"organization": 213
+}
 ```
 
 Response body:
