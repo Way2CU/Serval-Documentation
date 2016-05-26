@@ -25,6 +25,8 @@ Table of contents:
 		2. [Changing user information](api/users/change)
 		3. [Changing user password](#api/users/set-password)
 		4. [Removing user from the system](api/users/remove)
+		5. [Logging user in/starting a new session](#api/users/login)
+		6. [Logging user out/closting existing session](#api/users/logout)
 	5. [Collection services](#api/collection-services)
 		1. [Creating new collection service](#api/collection-services/add)
 		2. [Changing service details](#api/collection-services/change)
@@ -76,7 +78,7 @@ For internal communication authentication is not required as keys are considered
 
 Structure of API endpoint path for version 1.0 follows strict format (`/<version>/json/<object>`).  Objects are always included as a part of path and are case sensitive. They represent object of operation while request method (`GET`, `POST`, `DELETE`) specifies operation itself.
 
-For example, endpoint for creating new organization would be `/v1/json/organization` while using `POST` method. Organization information is transfered as request body in form of JSON object. Some objects support additional operations in their endpoint in format `/v1/json/<object>/<action>`.
+For example, endpoint for creating new organization would be `/v1/json/organization` while using `POST` method. Organization information is transferred as request body in form of JSON object. Some objects support additional operations in their endpoint in format `/v1/json/<object>/<action>`.
 
 
 #### <a name="api/endpoints/response-codes">Response codes</a>
@@ -386,4 +388,22 @@ Response body:
 
 ### <a name="api/users">User accounts</a>
 
-Working with user accounts is done through `/v1/json/users` endpoint. Account can be used with multiple organizations with different access levels to each.
+Working with user accounts is done through `/v1/json/users` and `/v1/json/user-session` endpoints. Account can be used with multiple organizations with different access levels to each.
+
+System recognizes the following actions, along with specified methods:
+
+<a name="api/users/data-structure">Data structure:</a>
+
+- `id` - Unique id of user;
+- `first_name` - First name;
+- `last_name` - Last name;
+- `phone_number` - Contact phone number;
+- `email` - Email address;
+- `username` - Username used to log in to system;
+- `password` - Hashed and salted password (not available to public);
+- `salt` - Salt used for password hash (not available to public);
+- `verified` - State of account;
+- `oauth_service` - OAuth service used (not available to public);
+- `oauth_token` - Token for OAuth service (not available to public).
+
+All fields except `id`, `password`, `salt` and `verified` can be changed.
