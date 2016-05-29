@@ -10,15 +10,18 @@ Table of contents:
 	2. [Example request](#endpoints/example-request)
 4. [Leads](#leads)
 	1. [Submitting new lead](#leads/submit)
+	1. [Changing lead data](#leads/change)
 	2. [Getting list of leads](#leads/get)
 	3. [Removing lead and its data](#leads/delete)
 	4. [Getting all data associated with lead](#leads/get_data)
 5. [Call information](#calls)
 	1. [Submitting new phone call](#calls/submit)
+	1. [Changing phone call data](#calls/change)
 	2. [Getting list of phone calls](#calls/get)
 	3. [Removing phone call](#calls/delete)
 6. [Contact forms](#forms)
 	1. [Submitting new contact form](#forms/submit)
+	1. [Changing contact form data](#forms/change)
 	2. [Getting list of contact forms](#forms/get)
 	3. [Removing contact form](#forms/delete)
 
@@ -81,6 +84,8 @@ Connection: close
 }
 ```
 
+Request body does not need to be formatted as long as it's valid JSON object.
+
 
 ## <a name="leads">Leads</a>
 
@@ -89,6 +94,7 @@ Working with leads is done through `/v1/json/leads` endpoint. While system suppo
 System recognizes the following actions, along with specified methods:
 
 - [Submitting new lead - `POST /v1/json/leads`](#leads/submit)
+- [Changing lead data - `PATCH /v1/json/leads`](#leads/change)
 - [Getting list of leads - `GET /v1/json/leads`](#leads/get)
 - [Removing lead and its data - `DELETE /v1/json/leads`](#leads/delete)
 - [Getting all data associated with lead - `GET /v1/json/leads/data`](#leads/get_data)
@@ -106,7 +112,7 @@ Only the following data can be changed: `name`, `status`.
 
 ### <a name="leads/submit">Submitting new lead</a>
 
-This endpoint is used to submit new lead or update existing information. By specifying lead `id` in your request body data will be modified instead of inserted. Only [specific fields](#leads/data-structure) can be modified. Others will be ignored.
+This endpoint is used to submit new lead data. Response will provide all of the lead data stored. Only [specific fields](#leads/data-structure) can be posted. Others will be ignored.
 
 Method: `POST`  
 Endpoint: `/v1/json/leads`
@@ -115,6 +121,36 @@ Request body:
 
 ```json
 {
+	"name": "Joe Danger",
+	"status": 0
+}
+```
+
+Response body:
+
+```json
+{
+	"id": 0,
+	"name": "Joe Danger",
+	"status": 0,
+	"initial_source": 0,
+	"timestamp": "2014-12-31 16:00:04"
+}
+```
+
+
+### <a name="leads/change">Changing lead data</a>
+
+Endpoint used to modify existing lead data. Only [specific fields](#leads/data-structure) can be modified. Others will be ignored. Along with data to be changed lead `id` must be provided. Response will provide all of the lead data stored.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/leads`
+
+Request body:
+
+```json
+{
+	"id": 0,
 	"name": "Joe Danger",
 	"status": 0
 }
@@ -204,6 +240,7 @@ Working with phone calls is done through `/v1/json/calls` endpoint. Phone calls 
 System recognizes the following actions, along with specified methods:
 
 - [Submitting new phone call - `POST /v1/json/calls`](#calls/submit)
+- [Changing phone call data - `PATCH /v1/json/calls`](#calls/change)
 - [Getting list of phone calls - `GET /v1/json/calls`](#calls/get)
 - [Removing phone call - `DELETE /v1/json/calls`](#calls/delete)
 
@@ -242,6 +279,47 @@ Request body:
 
 ```json
 {
+	"audio_url": "http://somesite.com/data/something.mp3",
+	"duration": 100,
+	"ring_time": 5,
+	"talk_time": 95,
+	"caller_number": "+1-955-555-1234",
+	"receiving_number": "+1-955-555-000",
+	"tags": "ctm, google, sale"
+}
+```
+
+Response body:
+
+```json
+{
+	"id": 0,
+	"lead": 1,
+	"source": 2
+}
+```
+
+
+### <a name="calls/change">Changing phone call data</a>
+
+Change phone call data associated with lead. This endpoint can also be used to associate phone call with a different lead. In addition to any other parameters phone call `id` must be provided. Only [specific fields](#calls/data-structure) can be posted. Others will be ignored.
+
+Response will contain all the data associated with the specified `id`.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/calls`
+
+Additional parameters:
+
+- `lead` - Id of lead to associate phone call with;
+- `name` - Caller name used to automatically associate with existing lead;
+- `email` - Caller email used to automatically associate with existing lead.
+
+Request body:
+
+```json
+{
+	"id": 0,
 	"audio_url": "http://somesite.com/data/something.mp3",
 	"duration": 100,
 	"ring_time": 5,
@@ -341,6 +419,7 @@ Working with contact forms is done through `/v1/json/forms` endpoint. Contact fo
 System recognizes the following actions, along with specified methods:
 
 - [Submitting new contact form - `POST /v1/json/forms`](#forms/submit)
+- [Changing contact form data - `PATCH /v1/json/forms`](#forms/change)
 - [Getting list of contact forms - `GET /v1/json/forms`](#forms/get)
 - [Removing contact form submission - `DELETE /v1/json/forms`](#forms/delete)
 
@@ -375,6 +454,41 @@ Request body:
 
 ```json
 {
+	"email": "joe.danger@site.com",
+	"phone": "+1-955-555-1234"
+}
+```
+
+Response body:
+
+```json
+{
+	"id": 0,
+	"lead": 1,
+	"source": 2
+}
+```
+
+
+### <a name="#forms/change">Changing contact form data</a>
+
+Change contact form data specified by `id`. This end point can also be used to assign data with different lead. Only [specific fields](#calls/data-structure) can be changed. Others will be ignored. Response will contain all the contact form data.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/forms`
+
+Additional parameters:
+
+- `lead` - Id of lead to associate form data with;
+- `name` - Caller name used to automatically associate with existing lead;
+- `email` - Caller email used to automatically associate with existing lead;
+- `phone_number` - Phone number used to automatically associate with existing lead.
+
+Request body:
+
+```json
+{
+	"id": 0,
 	"email": "joe.danger@site.com",
 	"phone": "+1-955-555-1234"
 }
