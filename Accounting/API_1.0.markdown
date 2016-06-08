@@ -142,7 +142,7 @@ All data, except for `id`, can be changed.
 
 #### <a name="api/organization/add">Adding new organization</a>
 
-This endpoint is used to create new organization associated with currently logged in user account. Response contains `id` of newly created organization and `result` of operation.
+This endpoint is used to create new organization associated with currently logged in user account. Response contains data for the newly created organization.
 
 Method: `POST`  
 Endpoint: `/v1/json/organization`
@@ -407,3 +407,31 @@ System recognizes the following actions, along with specified methods:
 - `oauth_token` - Token for OAuth service (not available to public).
 
 All fields except `id`, `password`, `salt` and `verified` can be changed.
+
+
+#### <a name="api/users/add">Creating new user account</a>
+
+Creates new user account with specified data. Account is not usable before verification, therefore response will only contain `id` of the newly created entry. In order to create account email, username and password must be provided. In case either of these fields is empty error is raised.
+
+Method: `POST`  
+Endpoint: `/v1/json/users`
+
+Request body:
+
+```json
+{
+	"first_name": "John",
+	"last_name": "Doe",
+	"email": "someone@site.com",
+	"password": "dadada"
+}
+```
+
+Response body:
+
+```json
+{
+	"id": 213,
+	"result": true
+}
+```
