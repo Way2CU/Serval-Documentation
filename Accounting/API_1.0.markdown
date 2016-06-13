@@ -22,11 +22,12 @@ Table of contents:
 		8. [Removing users from organization](#api/organization/remove-user)
 	4. [User accounts](#api/users)
 		1. [Creating new user account](#api/users/add)
-		2. [Changing user information](api/users/change)
-		3. [Changing user password](#api/users/set-password)
-		4. [Removing user from the system](api/users/remove)
-		5. [Logging user in/starting a new session](#api/users/login)
-		6. [Logging user out/closting existing session](#api/users/logout)
+		2. [Verifying user account](#api/users/verify)
+		3. [Changing user information](api/users/change)
+		4. [Changing user password](#api/users/set-password)
+		5. [Removing user from the system](api/users/remove)
+		6. [Logging user in/starting a new session](#api/users/login)
+		7. [Logging user out/closting existing session](#api/users/logout)
 	5. [Collection services](#api/collection-services)
 		1. [Creating new collection service](#api/collection-services/add)
 		2. [Changing service details](#api/collection-services/change)
@@ -413,6 +414,8 @@ All fields except `id`, `password`, `salt` and `verified` can be changed.
 
 Creates new user account with specified data. Account is not usable before verification, therefore response will only contain `id` of the newly created entry. In order to create account email, username and password must be provided. In case either of these fields is empty error is raised.
 
+Once new account is created verification code is generated and sent to provided email. Account is not usable until email address is verified.
+
 Method: `POST`  
 Endpoint: `/v1/json/users`
 
@@ -432,6 +435,39 @@ Response body:
 ```json
 {
 	"id": 213,
+	"result": true
+}
+```
+
+#### <a name="api/users/verify">Verifying user account</a>
+
+Before account can be used email address needs to be verified. Upon creating new account system will send an email with verification code and URL. Unique code is randomly generated id and associated with specific account.
+
+This endpoint allows both `POST` and `GET` methods to be used to allow users to verify account simply by clicking on a URL provided in verification email. This also means parameters can be provided as JSON object or as request parameters.
+
+Response is always in form of JSON object containing `result` of the verification process. Upon successful verification code is removed from the account.
+
+Method: `POST` or `GET`  
+Endpoint: `/v1/json/users/verify`
+
+Request body:
+
+```
+id=123&code=123457890ABCDEF
+```
+
+Or:
+
+```json
+{
+	"id": 123,
+	"code": "123457890ABCDEF"
+}
+```
+
+Response body:
+```json
+{
 	"result": true
 }
 ```
