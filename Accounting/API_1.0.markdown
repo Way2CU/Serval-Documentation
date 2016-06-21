@@ -420,7 +420,6 @@ All fields except `id`, `password`, `salt`, `oauth_service`, `oauth_token` and `
 
 This endpoint is called to retrieve information associated with authenticated user account. Web application makes this request in order to check if entered username and password are correct.
 
-
 Method: `GET`  
 Endpoint: `/v1/json/users`
 
@@ -508,9 +507,35 @@ Response body:
 
 #### <a name="api/users/change">Changing user information</a>
 
-Method: `PATCH`
+Used to change currently authenticated user account information. Only data specified in request body will be changed. Data which are read-only or nonexistent keys will be silently ignored.
+
+Response body contains object with complete user account data.
+
+Method: `PATCH`  
 Endpoint: `/v1/json/users`
 
+Request body:
+```json
+{
+	"first_name": "Marco",
+	"last_name": "Polo"
+}
+```
+
+Response body:
+
+```json
+{
+	"id": 213,
+	"first_name": "Marco",
+	"last_name": "Polo",
+	"phone_number": "",
+	"email": "",
+	"username": "jon-doe",
+	"verified": false,
+	"profile_image": "http://somesite.com/profile-image.jpg"
+}
+```
 
 #### <a name="api/users/set-password">Changing user password</a>
 #### <a name="api/users/remove">Removing user from the system</a>
