@@ -21,13 +21,12 @@ Table of contents:
 		7. [Changing user access to organization](#api/organization/change-access)
 		8. [Removing users from organization](#api/organization/remove-user)
 	4. [User accounts](#api/users)
-		1. [Creating new user account](#api/users/add)
-		2. [Verifying user account](#api/users/verify)
-		3. [Changing user information](api/users/change)
-		4. [Changing user password](#api/users/set-password)
-		5. [Removing user from the system](api/users/remove)
-		6. [Logging user in/starting a new session](#api/users/login)
-		7. [Logging user out/closting existing session](#api/users/logout)
+		1. [Getting user information](#api/users/get)
+		2. [Creating new user account](#api/users/add)
+		3. [Verifying user account](#api/users/verify)
+		4. [Changing user information](#api/users/change)
+		5. [Changing user password](#api/users/set-password)
+		6. [Removing user from the system](#api/users/remove)
 	5. [Collection services](#api/collection-services)
 		1. [Creating new collection service](#api/collection-services/add)
 		2. [Changing service details](#api/collection-services/change)
@@ -392,6 +391,12 @@ Response body:
 Working with user accounts is done through `/v1/json/users` and `/v1/json/user-session` endpoints. Account can be used with multiple organizations with different access levels to each.
 
 System recognizes the following actions, along with specified methods:
+- [Getting user information - `GET /v1/json/users`](#api/users/get)
+- [Creating new user account - `POST /v1/json/users`](#api/users/add)
+- [Verifying user account - `POST|GET /v1/json/users/verify`](#api/users/verify)
+- [Changing user information - `PATCH /v1/json/users`](#api/users/change)
+- [Changing user password - `PATCH /v1/json/users/password`](#api/users/set-password)
+- [Removing user from the system - `DELETE /v1/json/users`](#api/users/remove)
 
 <a name="api/users/data-structure">Data structure:</a>
 
@@ -405,10 +410,37 @@ System recognizes the following actions, along with specified methods:
 - `salt` - Salt used for password hash (not available to public);
 - `verified` - State of account;
 - `oauth_service` - OAuth service used (not available to public);
-- `oauth_token` - Token for OAuth service (not available to public).
+- `oauth_token` - Token for OAuth service (not available to public);
+- `profile_image` - URL to the profile image.
 
-All fields except `id`, `password`, `salt` and `verified` can be changed.
+All fields except `id`, `password`, `salt`, `oauth_service`, `oauth_token` and `verified` can be directly changed.
 
+
+#### <a name="api/users/get">Getting user information</a>
+
+This endpoint is called to retrieve information associated with authenticated user account. Web application makes this request in order to check if entered username and password are correct.
+
+
+Method: `GET`  
+Endpoint: `/v1/json/users`
+
+Request body:
+_There are no request parameters supported by this endpoint._
+
+Response body:
+
+```json
+{
+	"id": 213,
+	"first_name": "John",
+	"last_name": "Doe",
+	"phone_number": "",
+	"email": "",
+	"username": "jon-doe",
+	"verified": false,
+	"profile_image": "http://somesite.com/profile-image.jpg"
+}
+```
 
 #### <a name="api/users/add">Creating new user account</a>
 
@@ -438,6 +470,7 @@ Response body:
 	"result": true
 }
 ```
+
 
 #### <a name="api/users/verify">Verifying user account</a>
 
@@ -471,3 +504,13 @@ Response body:
 	"result": true
 }
 ```
+
+
+#### <a name="api/users/change">Changing user information</a>
+
+Method: `PATCH`
+Endpoint: `/v1/json/users`
+
+
+#### <a name="api/users/set-password">Changing user password</a>
+#### <a name="api/users/remove">Removing user from the system</a>
