@@ -22,11 +22,12 @@ Table of contents:
 		8. [Removing users from organization](#api/organization/remove-user)
 	4. [User accounts](#api/users)
 		1. [Getting user information](#api/users/get)
-		2. [Creating new user account](#api/users/add)
-		3. [Verifying user account](#api/users/verify)
-		4. [Changing user information](#api/users/change)
-		5. [Changing user password](#api/users/set-password)
-		6. [Removing user from the system](#api/users/remove)
+		2. [Getting list of user accounts](#api/users/get-list)
+		3. [Creating new user account](#api/users/add)
+		4. [Verifying user account](#api/users/verify)
+		5. [Changing user information](#api/users/change)
+		6. [Changing user password](#api/users/set-password)
+		7. [Removing user from the system](#api/users/remove)
 	5. [Collection services](#api/collection-services)
 		1. [Creating new collection service](#api/collection-services/add)
 		2. [Changing service details](#api/collection-services/change)
@@ -392,6 +393,7 @@ Working with user accounts is done through `/v1/json/users` and `/v1/json/user-s
 
 System recognizes the following actions, along with specified methods:
 - [Getting user information - `GET /v1/json/users`](#api/users/get)
+- [Getting list of user accounts - `GET /v1/json/users/all](#api/users/get-list)
 - [Creating new user account - `POST /v1/json/users`](#api/users/add)
 - [Verifying user account - `POST|GET /v1/json/users/verify`](#api/users/verify)
 - [Changing user information - `PATCH /v1/json/users`](#api/users/change)
@@ -440,6 +442,45 @@ Response body:
 	"profile_image": "http://somesite.com/profile-image.jpg"
 }
 ```
+
+
+#### <a name="api/users/get-list">Getting list of user accounts</a>
+
+Returns list of all user accounts matching information provided. This endpoint is used to list accounts associated with organizations or collection service.
+
+Request body contains elements of the user account to match with extra `organization` or `service` id parameter to limit result list only to accounts associated with specified entity. System matches names approximately.
+
+Response is a list of JSON objects containing all the matched user accounts with excluded private information (`username`, `verified`, `password`, `salt`, `oauth_service`, `oauth_token`, `email`, `phone_number`) in order to protect privacy of users.
+
+Method: `GET`  
+Endpoint: `/v1/json/users/all`
+
+Request body:
+
+```
+name=Joe&
+organization=12
+```
+
+Response body:
+
+```json
+[
+	{
+		"id": 213,
+		"first_name": "Joe",
+		"last_name": "Remul",
+		"profile_image": "http://somesite.com/profile-image.jpg"
+	},
+	{
+		"id": 2,
+		"first_name": "Joen",
+		"last_name": "",
+		"profile_image": "http://someothersite.com/profile-image.jpg"
+	}
+]
+```
+
 
 #### <a name="api/users/add">Creating new user account</a>
 
