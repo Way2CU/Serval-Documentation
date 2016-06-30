@@ -579,4 +579,44 @@ Response body:
 ```
 
 #### <a name="api/users/set-password">Changing user password</a>
+
+Change currently logged in user password. This endpoint expects JSON object with single property containing new password for the currently logged in user. Password change is immediate and following requests need to use it in order to get response from the server.
+
+Response object contains single `result` boolean value denoting success of the operation.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/users/password`
+
+Request body:
+
+```json
+{
+	"password": "tickle tickle little star"
+}
+```
+
+Response body:
+
+```json
+{
+	"result": true
+}
+```
+
+
 #### <a name="api/users/remove">Removing user from the system</a>
+
+Perform removal of currently logged in user from the Serval system. User account can not be removed if it is a single owner in any organization. In such cases another user account needs to be given owner permissions on organization or remove organization before removing user account. This endpoint doesn't require any additional parameters.
+
+Response body contains single boolean value denoting success of the operation. Upon removal user account is immediately rendered unusable.
+
+Method: `DELETE`  
+Endpoint: `/v1/json/users`
+
+Response body:
+
+```json
+{
+	"result": true
+}
+```
