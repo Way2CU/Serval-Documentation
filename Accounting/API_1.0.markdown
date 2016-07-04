@@ -140,6 +140,21 @@ System recognizes the following actions, along with specified methods:
 
 All data, except for `id`, can be changed.
 
+<a name="api/organization/access-data-structure">Access list data structure:</a>
+
+- `organization` - Unique id of the organization;
+- `service` - Unique id of service;
+- `user` - Unique user id;
+- `type` - Type of access.
+
+Either of the two (`organization` and `service`) can be specified for access. If user is assigned access to `organization` alone it will have access to all services on the system. Specifying `service` limits access to that service alone. When configuring user can be given access only to services and organization currently logged in user has `owner` access.
+
+System recognizes the following types of access:
+
+- `agent` - Minimal level of access to your organization and services. Can only post data to specified services;
+- `user` - Regular access to data without ability to change system configuration;
+- `owner` - Maximum level acces. Allows configuration of organization and services.
+
 
 #### <a name="api/organization/add">Adding new organization</a>
 
@@ -334,7 +349,7 @@ Response body:
 
 #### <a name="api/organization/change-access">Changing user access to organization</a>
 
-Change access for user in organization. This endpoint allows you to promote or demote users withing organization. It is also used in ownership transfers. It's important to note that organization can have more than one owner account and in fact an advisable situation to be in as it will make sure [bus factor](https://en.wikipedia.org/wiki/Bus_factor) is higher.
+Change access for user in organization. This endpoint allows you to promote or demote users withing organization. It is also used in ownership transfers. It's important to note that organization can have more than one owner account and in fact an advisable situation to be in as it will make sure [bus factor](https://en.wikipedia.org/wiki/Bus_factor) is higher. When configuring user can be given access only to services and organization currently logged in user has `owner` access.
 
 Response object contains `result` of the operation.
 
