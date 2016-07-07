@@ -30,22 +30,20 @@ Table of contents:
 		7. [Removing user from the system](#api/users/remove)
 	5. [Collection services](#api/collection-services)
 		1. [Getting collection service information](#api/collection-services/get)
-		2. [Getting list of collection services](#api/collection-services/get-list)
-		3. [Creating new collection service](#api/collection-services/add)
-		4. [Changing service details](#api/collection-services/change)
-		5. [Getting collection service status](#api/collection-services/status/get)
-		6. [Restarting and stopping service](#api/collection-services/status/change)
-		7. [Removing collection service](#api/collection-services/remove)
-		8. [Listing users associated with service](#api/collection-services/get-user)
-		9. [Adding service user](#api/collection-services/add-user)
-		10. [Changing user data](#api/collection-services/change-user)
-		11. [Removing user from the service](#api/collection-services/remove-user)
+		2. [Creating new collection service](#api/collection-services/add)
+		3. [Changing service details](#api/collection-services/change)
+		4. [Restarting and stopping service](#api/collection-services/status/change)
+		5. [Removing collection service](#api/collection-services/remove)
+		6. [Listing users associated with service](#api/collection-services/get-user)
+		7. [Adding service user](#api/collection-services/add-user)
+		8. [Changing user data](#api/collection-services/change-user)
+		9. [Removing user from the service](#api/collection-services/remove-user)
 4. [Internal communication](#ipc)
 
 
 ## <a name="data-formats">Data formats</a>
 
-_Serval_ accounting service uses [Protocol Buffers][protobuff] for internal communication with puppeteer service and collection service. Communication with public API is done with JSON objects through standard HTTP(S) protocol. All data is stored and used in UTF32 encoding.
+_Serval_ accounting service uses [Protocol Buffers][protobuff] for internal communication with controller service and collection service. Communication with public API is done with JSON objects through standard HTTP(S) protocol. All data is stored and used in UTF32 encoding.
 
 When communicating with public API through `POST` methods, both request and response body is in JSON form. `GET` and `DELETE` use standard NVP query strings for request, response body is then returned in JSON format. _All NVP parameter values must be URL encoded._
 
@@ -233,7 +231,7 @@ If this request is made before waiting period is over, system will return `false
 Method: `DELETE`  
 Endpoint: `/v1/json/organization`
 
-Request body:
+Request parameters:
 
 ```
 organization=213
@@ -307,7 +305,7 @@ Get list of all users with access to `organization` specified in request paramet
 Method: `GET`  
 Endpoint: `/v1/json/organization-access`
 
-Request body:
+Request parameters:
 
 ```
 organization=213
@@ -444,7 +442,7 @@ This endpoint is called to retrieve information associated with authenticated us
 Method: `GET`  
 Endpoint: `/v1/json/users`
 
-Request body:
+Request parameters:
 _There are no request parameters supported by this endpoint._
 
 Response body:
@@ -474,7 +472,7 @@ Response is a list of JSON objects containing all the matched user accounts with
 Method: `GET`  
 Endpoint: `/v1/json/users/all`
 
-Request body:
+Request parameters:
 
 ```
 name=Joe&
@@ -643,19 +641,64 @@ Response body:
 
 ### <a name="api/colleciton-services">Collection services</a>
 
-Working with collection services is done through `/v1/json/collection-service`, `/v1/json/collection-service/user` and `/v1/json/collection-service/status` endpoints. These services are physically separate locations where you data is stored. They can be spread apart on different servers and even different countries. This approach allows for better redundancy, uptime and ease of maintenance.
+Working with collection services is done through `/v1/json/collection-service` and `/v1/json/collection-service/user` endpoints. These services are physically separate locations where you data is stored. They can be spread apart on different servers and even different countries. This approach allows for better redundancy, uptime and ease of maintenance.
 
 Accounting server, and with it this API, allows for controlling service status, user access and creating of new services. Working with data stored on the service requires connecting to the service itself. Connection information is provided with service listing.
 
+Service status is sent by the service periodically to simplify operations on large scale.
+
 System recognizes the following actions, along with specified methods:
 - [Getting collection service information - `GET /v1/json/collection-service`](#api/collection-services/get)
-- [Getting list of collection services - `GET /v1/json/collection-service/all`](#api/collection-services/get-list)
 - [Creating new collection service - `POST /v1/json/collection-service`](#api/collection-services/add)
 - [Changing service details - `PATCH /v1/json/collection-service`](#api/collection-services/change)
 - [Removing collection service - `DELETE /v1/json/collection-service`](#api/collection-services/remove)
-- [Getting collection service status - `GET /v1/json/collection-service/status`](#api/collection-services/status)
 - [Restarting and stopping service - `PATCH /v1/json/collection-service/status`](#api/collection-services/status)
 - [Listing users associated with service - `GET /v1/json/collection-service/user`](#api/collection-services/get-user)
 - [Adding service user - `POST /v1/json/collection-service/user`](#api/collection-services/add-user)
 - [Changing user data - `PATCH /v1/json/collection-service/user`](#api/collection-services/change-user)
 - [Removing user from the service - `DELETE /v1/json/collection-service/user`](#api/collection-services/remove-user)
+
+<a name="api/collection-services/data-structure">Data structure:</a>
+
+- `id` - Unique id of collection service in accounting;
+- `name` - Custom name for easier tracking;
+- `status` - Last reported status of a service;
+- `status_timestamp` - Time when status was last reported;
+- `organization` - Organization service belongs to;
+- `address_v4` - IPv4 address where service is located;
+- `address_v6` - IPv6 address where service is located;
+- `controller` - Controller service in charge.
+
+Only `name` and `organization` fields can be changed through API.
+
+
+#### <a name="api/collection-services/get">Getting collection service information</a>
+
+Retrieve information about specified collection service. Only services currently logged in user has access to can be retrieved. If no service `id` is specified all services user has access to will be returned.
+
+Response body is a list containing JSON objects representing collection services.
+
+Method: `GET`  
+Endpoint: `/v1/json/collection-service`
+
+Request parameters: 
+```
+id=11
+```
+
+Response body:
+```json
+[
+	{
+		"id": "11",
+		"name": "Blog",
+		"status": 1,
+		"status_timestamp": 1467902960,
+		"organization": 213,
+		"address_v4": "192.168.0.1",
+		"address_v6": "2001:0db8:0000:0042:0000:8a2e:0370:7334",
+		"controller": 15
+	}
+]
+```
+
