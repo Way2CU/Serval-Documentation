@@ -29,13 +29,17 @@ Table of contents:
 		6. [Changing user password](#api/users/set-password)
 		7. [Removing user from the system](#api/users/remove)
 	5. [Collection services](#api/collection-services)
-		1. [Creating new collection service](#api/collection-services/add)
-		2. [Changing service details](#api/collection-services/change)
-		3. [Restarting and stopping service](#api/collection-services/status)
-		4. [Removing collection service](#api/collection-services/remove)
-		5. [Adding service user](#api/collection-services/add-user)
-		6. [Changing user data](#api/collection-services/change-user)
-		7. [Removing user from the service](#api/collection-services/remove-user)
+		1. [Getting collection service information](#api/collection-services/get)
+		2. [Getting list of collection services](#api/collection-services/get-list)
+		3. [Creating new collection service](#api/collection-services/add)
+		4. [Changing service details](#api/collection-services/change)
+		5. [Getting collection service status](#api/collection-services/status/get)
+		6. [Restarting and stopping service](#api/collection-services/status/change)
+		7. [Removing collection service](#api/collection-services/remove)
+		8. [Listing users associated with service](#api/collection-services/get-user)
+		9. [Adding service user](#api/collection-services/add-user)
+		10. [Changing user data](#api/collection-services/change-user)
+		11. [Removing user from the service](#api/collection-services/remove-user)
 4. [Internal communication](#ipc)
 
 
@@ -635,3 +639,23 @@ Response body:
 	"result": true
 }
 ```
+
+
+### <a name="api/colleciton-services">Collection services</a>
+
+Working with collection services is done through `/v1/json/collection-service`, `/v1/json/collection-service/user` and `/v1/json/collection-service/status` endpoints. These services are physically separate locations where you data is stored. They can be spread apart on different servers and even different countries. This approach allows for better redundancy, uptime and ease of maintenance.
+
+Accounting server, and with it this API, allows for controlling service status, user access and creating of new services. Working with data stored on the service requires connecting to the service itself. Connection information is provided with service listing.
+
+System recognizes the following actions, along with specified methods:
+- [Getting collection service information - `GET /v1/json/collection-service`](#api/collection-services/get)
+- [Getting list of collection services - `GET /v1/json/collection-service/all`](#api/collection-services/get-list)
+- [Creating new collection service - `POST /v1/json/collection-service`](#api/collection-services/add)
+- [Changing service details - `PATCH /v1/json/collection-service`](#api/collection-services/change)
+- [Removing collection service - `DELETE /v1/json/collection-service`](#api/collection-services/remove)
+- [Getting collection service status - `GET /v1/json/collection-service/status`](#api/collection-services/status)
+- [Restarting and stopping service - `PATCH /v1/json/collection-service/status`](#api/collection-services/status)
+- [Listing users associated with service - `GET /v1/json/collection-service/user`](#api/collection-services/get-user)
+- [Adding service user - `POST /v1/json/collection-service/user`](#api/collection-services/add-user)
+- [Changing user data - `PATCH /v1/json/collection-service/user`](#api/collection-services/change-user)
+- [Removing user from the service - `DELETE /v1/json/collection-service/user`](#api/collection-services/remove-user)
