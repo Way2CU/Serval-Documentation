@@ -702,3 +702,31 @@ Response body:
 ]
 ```
 
+
+#### <a name="api/collection-services/add">Creating new collection service</a>
+
+Schedule creation of new collection service with specified `name`. Optionally desired `country` where service will be hosted can be requested. If user has _owner_ access to more than one organization additional parameter (`organization`) can be submitted. Newly created collection service will be assigned to either organization provided as a parameter or to organization currently logged in user has _owner_ access to.
+
+Method: `POST`  
+Endpoint: `/v1/json/collection-service`
+
+Request body:
+```json
+{
+	"name": "Blog",
+	"organization": 11,
+	"country": "de"
+}
+```
+
+Response body:
+```json
+{
+	"result": true,
+	"id": 1000,
+	"name": "Blog",
+	"organization": 11
+```
+
+
+
