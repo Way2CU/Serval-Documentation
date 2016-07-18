@@ -705,7 +705,7 @@ Response body:
 
 #### <a name="api/collection-services/add">Creating new collection service</a>
 
-Schedule creation of new collection service with specified `name`. Optionally desired `country` where service will be hosted can be requested. If user has _owner_ access to more than one organization additional parameter (`organization`) can be submitted. Newly created collection service will be assigned to either organization provided as a parameter or to organization currently logged in user has _owner_ access to.
+Schedule creation of new collection service with specified `name`. Optionally desired `country` where service will be hosted can be requested. If user has _owner_ access to more than one organization additional parameter (`organization`) can be submitted. Newly created collection service will be assigned to either organization provided as a parameter or to organization currently logged in user has _owner_ access to. In cases where user is owner in multiple organizations and parameter is not specified to denote which organization new service belongs to system will avoid creating the service to avoid bad assignment.
 
 Method: `POST`  
 Endpoint: `/v1/json/collection-service`
@@ -729,4 +729,50 @@ Response body:
 ```
 
 
+#### <a name="api/collection-services/change">Changing service details</a>
 
+Change collection service information. This endpoint can only be used to change some of the information. Changing service status, for example, is done through separate endpoint.
+
+Response is in form of JSON object containing `result` of the operation and _changed_ collection service data.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/collection-service`
+
+Request body:
+```json
+{
+	"id": 11,
+	"name": "Blog"
+}
+```
+
+Response body:
+```json
+{
+	"result": true,
+	"id": 1000,
+	"name": "Blog",
+	"organization": 11
+```
+
+
+#### <a name="api/collection-services/remove">Removing collection service</a>
+
+Schedule collection service removal with controller in charge. As opposed to organization, collection services do not require waiting period and can be scheduled for removal immediately. There is usually very limited waiting period as service removal is performed by controller. Calling this end point with service `id` as a parameter will tell controller to stop the service and perform removal of service and its backups.
+
+Response body contains JSON object with only one attribute (`result`) denoting outcome of operation.
+
+Method: `DELETE`  
+Endpoint: `/v1/json/collection-service`
+
+Request parameters:
+```
+id=11
+```
+
+Response body:
+```json
+{
+	"result": true
+}
+```
