@@ -32,8 +32,8 @@ Table of contents:
 		1. [Getting collection service information](#api/collection-services/get)
 		2. [Creating new collection service](#api/collection-services/add)
 		3. [Changing service details](#api/collection-services/change)
-		4. [Restarting and stopping service](#api/collection-services/status/change)
-		5. [Removing collection service](#api/collection-services/remove)
+		4. [Removing collection service](#api/collection-services/remove)
+		5. [Restarting and stopping service](#api/collection-services/status/change)
 		6. [Listing users associated with service](#api/collection-services/get-user)
 		7. [Adding service user](#api/collection-services/add-user)
 		8. [Changing user data](#api/collection-services/change-user)
@@ -678,6 +678,12 @@ Retrieve information about specified collection service. Only services currently
 
 Response body is a list containing JSON objects representing collection services.
 
+Status attribute can have the following values:
+
+- `running` - service is running and accepting new data;
+- `stopped` - service is in stopped mode and is only accepting IPC requests;
+- `disabled` - service is disabled due to maintenance or some accounting error.
+
 Method: `GET`  
 Endpoint: `/v1/json/collection-service`
 
@@ -692,7 +698,7 @@ Response body:
 	{
 		"id": "11",
 		"name": "Blog",
-		"status": 1,
+		"status": "running",
 		"status_timestamp": 1467902960,
 		"organization": 213,
 		"address_v4": "192.168.0.1",
@@ -776,3 +782,36 @@ Response body:
 	"result": true
 }
 ```
+
+
+#### <a name="api/collection-services/status/change">Restarting and stopping service</a>
+
+This end point allows control of collection service status. It will allow user to stop, restart and resume operations of any collection service belonging to organization user has _owner_ access. Request object must contain service `id` and desired `status` of the service. Value of `status` attribute is not the same as value returned by getting service status. These values are intermediate and only serve to set desired status which other methods return.
+
+Response body contains JSON object with `result` of the operation and target service `status`. If process of setting new status fails `status` attribute will contain last know status of the service.
+
+Recognized intermediate status values:
+
+- `start`;
+- `restart`;
+- `stop`.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/collection-service/status`
+
+Request body:
+```json
+{
+	"id": 11,
+	"status": "stopped"
+}
+```
+
+Response body:
+```json
+{
+	"result": true,
+	"status": "stopped"
+}
+```
+
