@@ -815,3 +815,31 @@ Response body:
 }
 ```
 
+
+#### <a name="api/collection-services/get-user">Listing users associated with service</a>
+
+Returns a list of credentials which have access to specified collection service. These user accounts are not related to user accounts which have access to web application. By design access to collection service is limited per-service and in certain way. This provides better security and easier integration.
+
+Collection service credentials are only available to accounts with _owner_ access to organization service belongs to. Response body contains list of JSON objects. In cases there are no credentials associated with collection service empty list is returned.
+
+Method: `GET`  
+Endpoint: `/v1/json/collection-service/user`
+
+Request parameters:
+```
+service=212
+```
+
+Response body:
+```json
+[
+	{
+		"id": 1,
+		"name": "Web JavaScript",
+		"uid": "123ffee123",
+		"last_access": 1467902960,
+		"type": 0
+	}
+]
+```
+
