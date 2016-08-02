@@ -38,6 +38,7 @@ Table of contents:
 		7. [Adding service user](#api/collection-services/add-user)
 		8. [Changing user data](#api/collection-services/change-user)
 		9. [Removing user from the service](#api/collection-services/remove-user)
+		10. [Retrieving secret key for user](#api/collection-services/get-user-key)
 4. [Internal communication](#ipc)
 
 
@@ -657,6 +658,7 @@ System recognizes the following actions, along with specified methods:
 - [Adding service user - `POST /v1/json/collection-service/user`](#api/collection-services/add-user)
 - [Changing user data - `PATCH /v1/json/collection-service/user`](#api/collection-services/change-user)
 - [Removing user from the service - `DELETE /v1/json/collection-service/user`](#api/collection-services/remove-user)
+- [Retrieving secret key for user - `GET /v1/json/collection-service/key`](#api/collection-services/get-user-key)
 
 <a name="api/collection-services/data-structure">Data structure:</a>
 
@@ -870,3 +872,30 @@ Response body:
 	"type": 0,
 	"result": true
 }
+```
+
+
+#### <a name="api/collection-services/get-user-key">Retrieving secret key for user</a>
+
+Retrieve secret key associated with specified user `id`. This method can be called only once per user `id` for security reasons. As secret keys are not stored in plain text format they can not be recovered. In cases where key is lost creating new user and removing old is suggested solution. As collection service users are created asynchronously it's possible that `secret` is not available immediately after creating user.
+
+This endpoint can be called only by accounts with `owner` access to organization service belongs to.
+
+Response body is JSON object containing `result` of the operation and `secret` if available.
+
+Method: `GET`  
+Endpoint: `/v1/json/collection-service/key`
+
+Request parameters:
+```
+user=1
+```
+
+Response body:
+```json
+{
+	"result": true,
+	"secret": "..."
+}
+```
+
