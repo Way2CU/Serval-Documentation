@@ -843,3 +843,30 @@ Response body:
 ]
 ```
 
+
+#### <a name="api/collection-services/add-user">Adding service user</a>
+
+Add new user to the collection service. These credentials are used by plugins and web applications to interact with collection service. System will generate secret key of sufficient strength and store it securely. Once generated secret is sent back to accounting service from where it can be displayed exactly once to keep the security high. It's important to note recovery of secret key is not possible as it's not stored in its original form once presented to the user.
+
+System will create client locally on accounting service first and schedule creating client on collection service itself as soon as possible. Response body will contain unique user `id` and other information. It will *not* however contain secret key. In order to get the key for access another API call has to be made.
+
+Method: `POST`  
+Endpoint: `/v1/json/collection-service/user`
+
+Request body:
+```json
+{
+	"name": "Web JavaScript",
+	"type": 0
+}
+```
+
+Response body:
+```json
+{
+	"id": 1,
+	"name": "Web JavaScript",
+	"uid": "123ffee123",
+	"type": 0,
+	"result": true
+}
