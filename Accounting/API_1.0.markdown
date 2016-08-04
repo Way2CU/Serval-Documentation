@@ -859,7 +859,36 @@ Request body:
 ```json
 {
 	"name": "Web JavaScript",
+	"service": 212,
 	"type": 0
+}
+```
+
+Response body:
+```json
+{
+	"id": 1,
+	"name": "Web JavaScript",
+	"uid": "123ffee123",
+	"type": 0,
+	"result": true
+}
+```
+
+
+#### <a name="api/collection-services/change-user">Changing user data</a>
+
+Change collection service user data. This end point can not be used to change secret key used to authenticate with collection service. Only data provided in the request body will be changes. Others will be silently ignored.
+
+Response is JSON object containing collection service user data and additional `result` key denoting success of the operation.
+
+Method: `PATCH`  
+Endpoint: `/v1/json/collection-service/user`
+
+Request body:
+```json
+{
+	"name": "Web JavaScript"
 }
 ```
 
