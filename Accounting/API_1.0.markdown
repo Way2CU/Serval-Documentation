@@ -904,6 +904,28 @@ Response body:
 ```
 
 
+#### <a name="api/collection-services/remove-user">Removing user from the service</a>
+
+Remove user from collection service. This endpoint is only available to accounts with _owner_ and _admin_ access to organization which service belongs to. User `id` is a global unique identificator and does not require specifying service.
+
+Response body is JSON object containing `result` of the operation. Before removing users please make sure scripts and tools that use it are configured properly. Trying to log in with non-existent user will trigger protections and will block your IP address for a short amount of time.
+
+Method: `DELETE`  
+Endpoint: `/v1/json/collection-service/user`
+
+Request parameters:
+```
+id=1
+```
+
+Response body:
+```json
+{
+	"result": true
+}
+```
+
+
 #### <a name="api/collection-services/get-user-key">Retrieving secret key for user</a>
 
 Retrieve secret key associated with specified user `id`. This method can be called only once per user `id` for security reasons. As secret keys are not stored in plain text format they can not be recovered. In cases where key is lost creating new user and removing old is suggested solution. As collection service users are created asynchronously it's possible that `secret` is not available immediately after creating user.
